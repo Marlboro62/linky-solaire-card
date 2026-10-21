@@ -14,7 +14,7 @@
  */
 
 (() => {
-const CARD_VERSION = "0.1.0-beta";
+const CARD_VERSION = "0.1.1-beta";
 
 /* ------------------------------------------------------------- affichage */
 
@@ -93,13 +93,13 @@ class LinkySolaireCard extends HTMLElement {
     this._fetchedAt = 0;
     this._sig = null;
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
-    this.shadowRoot.onclick = (ev) => {
+    if (!this._clicks) this.shadowRoot.addEventListener("click", (this._clicks = (ev) => {
       const el = ev.target.closest?.("[data-entity]");
       if (!el) return;
       const e = new Event("hass-more-info", { bubbles: true, composed: true });
       e.detail = { entityId: el.dataset.entity };
       this.dispatchEvent(e);
-    };
+    }));
     this._load();
     this._render();
   }
