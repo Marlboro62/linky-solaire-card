@@ -10,7 +10,7 @@ Elle a le même style que la [Carte Enedis Linky New](https://github.com/Marlbor
 | --- | --- |
 | ![Aperçu sombre](images/apercu-sombre.png) | ![Aperçu clair](images/apercu-clair.png) |
 
-*Aperçus réalisés avec des données fictives.*
+*Aperçus réalisés avec des données fictives. Carte validée avec une installation Enphase réelle (production remise à zéro chaque jour, import et export cumulés).*
 
 ## Ce que la carte affiche
 
@@ -30,11 +30,9 @@ Chaque série est facultative : avec seulement un capteur de production, la cart
 2. Ajoutez `https://github.com/Marlboro62/linky-solaire-card` avec le type **Tableau de bord** (Dashboard).
 3. Cherchez **Carte Linky Solaire**, installez-la, puis rechargez la page (Ctrl+F5).
 
-> Tant qu'il n'existe qu'une version bêta, activez **Afficher les versions bêta** dans la fenêtre de téléchargement de HACS.
-
 ### Manuellement
 
-1. Téléchargez `linky-solaire-card.js` depuis les [releases](https://github.com/Marlboro62/linky-solaire-card/releases) et copiez-le dans `/config/www/`.
+1. Téléchargez `linky-solaire-card.js` depuis la [dernière release](https://github.com/Marlboro62/linky-solaire-card/releases/latest) et copiez-le dans `/config/www/`.
 2. **Paramètres → Tableaux de bord → ⋮ → Ressources → Ajouter une ressource** :
    - URL : `/local/linky-solaire-card.js`
    - Type : **Module JavaScript**
