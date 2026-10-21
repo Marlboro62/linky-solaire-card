@@ -1,0 +1,11 @@
+# Carte Linky Solaire : exemple de configuration.
+# Remplacez les entités par vos propres compteurs d'énergie (kWh ou Wh,
+# state_class total_increasing ou total). Chaque série est facultative.
+type: custom:linky-solaire-card
+title: Solaire
+production: sensor.onduleur_energie_produite   # panneaux / onduleur
+import: sensor.energie_importee                # soutiré du réseau
+export: sensor.energie_exportee                # injecté sur le réseau
+days: 7                                        # 1 à 31 jours, aujourd'hui compris
+show_table: true
+theme: v2                                      # v2, auto ou ha

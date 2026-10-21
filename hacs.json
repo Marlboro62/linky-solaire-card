@@ -1,0 +1,6 @@
+{
+  "name": "Carte Linky Solaire",
+  "filename": "linky-solaire-card.js",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}
