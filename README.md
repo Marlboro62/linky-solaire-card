@@ -32,7 +32,7 @@ Chaque série est facultative : avec seulement un capteur de production, la cart
 
 ### Manuellement
 
-1. Téléchargez `linky-solaire-card.js` depuis la [dernière release](https://github.com/Marlboro62/linky-solaire-card/releases/latest) et copiez-le dans `/config/www/`.
+1. Téléchargez [`linky-solaire-card.js`](https://raw.githubusercontent.com/Marlboro62/linky-solaire-card/main/linky-solaire-card.js) (clic droit → Enregistrer sous) et copiez-le dans `/config/www/`.
 2. **Paramètres → Tableaux de bord → ⋮ → Ressources → Ajouter une ressource** :
    - URL : `/local/linky-solaire-card.js`
    - Type : **Module JavaScript**
