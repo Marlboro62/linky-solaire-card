@@ -14,7 +14,7 @@
  */
 
 (() => {
-const CARD_VERSION = "0.1.2";
+const CARD_VERSION = "0.2.0";
 
 /* ------------------------------------------------------------- affichage */
 
@@ -44,13 +44,17 @@ const SOL_DEFAULTS = {
   production: "",
   import: "",
   export: "",
+  used: "",
+  show_used: true,
   show_table: true,
   theme: "v2",
 };
 
-/** Les trois séries, dans l'ordre d'affichage. */
+/** Les séries, dans l'ordre d'affichage. « Utilisé » (énergie produite consommée sur place) vient de son
+ *  capteur, sinon il est calculé chaque jour : produit − exporté. */
 const SERIES = [
   { key: "production", label: "Produit", cls: "s-prod", icon: "mdi:solar-power-variant" },
+  { key: "used", label: "Utilisé", cls: "s-use", icon: "mdi:home-lightning-bolt-outline" },
   { key: "import", label: "Importé", cls: "s-imp", icon: "mdi:transmission-tower-import" },
   { key: "export", label: "Exporté", cls: "s-exp", icon: "mdi:transmission-tower-export" },
 ];
@@ -163,7 +167,13 @@ class LinkySolaireCard extends HTMLElement {
     }
   }
 
-  /** Construit la liste des jours (du plus ancien au plus récent) avec les trois valeurs. */
+  /** « Utilisé » calculé (produit − exporté) : sans capteur dédié, si la production et l'export sont configurés. */
+  _usedComputed() {
+    const c = this._config;
+    return !c.used && c.show_used !== false && !!c.production && !!c.export;
+  }
+
+  /** Construit la liste des jours (du plus ancien au plus récent) avec les valeurs de chaque série. */
   _days() {
     const c = this._config;
     const out = [];
@@ -181,6 +191,9 @@ class LinkySolaireCard extends HTMLElement {
         const day = byKey.get(dayKey(t));
         if (day && Number.isFinite(row.change)) day[s.key] = (day[s.key] || 0) + row.change;
       }
+    }
+    if (this._usedComputed()) {
+      for (const d of out) if (d.production !== undefined && d.export !== undefined) d.used = Math.max(0, d.production - d.export);
     }
     return out;
   }
@@ -218,21 +231,22 @@ class LinkySolaireCard extends HTMLElement {
     }
 
     const days = this._days();
-    const active = SERIES.filter((s) => c[s.key]);
-    const noStats = active.filter((s) => !(this._data.res[c[s.key]] || []).length);
+    const computed = this._usedComputed();
+    const active = SERIES.filter((s) => (s.key === "used" ? (c.used && c.show_used !== false) || computed : c[s.key]));
+    const noStats = active.filter((s) => c[s.key] && !(this._data.res[c[s.key]] || []).length);
     const total = (k) => {
       const v = days.map((d) => d[k]).filter((x) => x !== undefined);
       return v.length ? v.reduce((a, b) => a + b, 0) : null;
     };
     const T = Object.fromEntries(active.map((s) => [s.key, total(s.key)]));
 
-    // Autoconsommation = produit − exporté ; autonomie = autoconsommé / (autoconsommé + importé)
-    const self = T.production != null && T.export != null ? Math.max(0, T.production - T.export) : null;
+    // Autoconsommation = capteur « utilisé », sinon produit − exporté ; autonomie = autoconsommé / (autoconsommé + importé)
+    const self = c.used && T.used != null ? T.used : T.production != null && T.export != null ? Math.max(0, T.production - T.export) : null;
     const selfPct = self != null && T.production > 0 ? (self / T.production) * 100 : null;
     const auto = self != null && T.import != null && self + T.import > 0 ? (self / (self + T.import)) * 100 : null;
 
     const tiles = active
-      .map((s) => `<div class="tile ${s.cls}" data-entity="${esc(c[s.key])}">
+      .map((s) => `<div class="tile ${s.cls}" data-entity="${esc(c[s.key] || c.production)}"${s.key === "used" && !c.used ? ' title="Calculé : produit − exporté"' : ""}>
           <div class="tile-l"><i class="sw"></i>${s.label}</div>
           <div class="tile-v">${kwh(T[s.key])}<span>kWh</span></div>
           <div class="tile-n">${this._todayLine(days, s.key)}</div>
@@ -310,11 +324,14 @@ class LinkySolaireCard extends HTMLElement {
 }
 
 const SOL_STYLE = `<style>
-ha-card { display: block; --sol-prod: #f5b82e; --sol-imp: var(--med-blue); --sol-exp: var(--med-green); }
-ha-card.light { --sol-prod: #d18a00; }
+ha-card { display: block; --sol-prod: #f5b82e; --sol-imp: var(--med-blue); --sol-exp: var(--med-green); --sol-use: #b07cf0; }
+ha-card.light { --sol-prod: #d18a00; --sol-use: #8a4fd6; }
 .brand .sun { fill: var(--sol-prod); }
 .sol-tiles.n1 { grid-template-columns: 1fr; }
+.sol-tiles.n2 { grid-template-columns: repeat(2, 1fr); }
 .sol-tiles.n3 { grid-template-columns: repeat(3, 1fr); }
+.sol-tiles.n4 { grid-template-columns: repeat(4, 1fr); }
+@container (max-width: 520px) { .sol-tiles.n4 { grid-template-columns: repeat(2, 1fr); } }
 @container (max-width: 400px) { .sol-tiles.n3 { grid-template-columns: 1fr; } }
 .sol-tiles .tile { cursor: pointer; }
 .sol-tiles .tile:hover { background: var(--med-surface); }
@@ -323,6 +340,7 @@ ha-card.light { --sol-prod: #d18a00; }
 .s-prod .sw, .sol-leg i.s-prod { background: var(--sol-prod); }
 .s-imp .sw, .sol-leg i.s-imp { background: var(--sol-imp); }
 .s-exp .sw, .sol-leg i.s-exp { background: var(--sol-exp); }
+.s-use .sw, .sol-leg i.s-use { background: var(--sol-use); }
 .ratios { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 12px 0; }
 .ratios > div { flex: 1 1 150px; padding: 10px 12px; border-radius: 12px; background: var(--med-surface); border: 1px solid var(--med-line);
   display: flex; flex-direction: column; gap: 1px; font-size: .78rem; }
@@ -335,6 +353,7 @@ ha-card.light { --sol-prod: #d18a00; }
 .chart.sol rect.s-prod { fill: var(--sol-prod); }
 .chart.sol rect.s-imp { fill: var(--sol-imp); }
 .chart.sol rect.s-exp { fill: var(--sol-exp); }
+.chart.sol rect.s-use { fill: var(--sol-use); }
 .chart.sol line.base { stroke: var(--med-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .chart.sol .day { cursor: default; }
 .sol-t { width: calc(100% - 24px); margin: 12px 12px 0; border-collapse: collapse; font-size: .8rem; color: var(--med-text); }
@@ -540,6 +559,8 @@ const SOL_SCHEMA = [
   { name: "production", selector: { entity: { domain: "sensor", device_class: "energy" } } },
   { name: "import", selector: { entity: { domain: "sensor", device_class: "energy" } } },
   { name: "export", selector: { entity: { domain: "sensor", device_class: "energy" } } },
+  { name: "used", selector: { entity: { domain: "sensor", device_class: "energy" } } },
+  { name: "show_used", selector: { boolean: {} } },
   {
     name: "days",
     selector: {
@@ -561,6 +582,8 @@ const SOL_LABELS = {
   production: "Énergie produite (panneaux, onduleur)",
   import: "Énergie importée du réseau",
   export: "Énergie exportée vers le réseau",
+  used: "Énergie produite utilisée sur place (facultatif, sinon calculée : produit − exporté)",
+  show_used: "Afficher l'énergie utilisée (autoconsommée) par jour",
   days: "Historique affiché",
   show_table: "Afficher le tableau jour par jour",
   theme: "Couleurs de la carte",

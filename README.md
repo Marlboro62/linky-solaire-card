@@ -1,6 +1,6 @@
 # Carte Linky Solaire
 
-Carte Lovelace pour Home Assistant qui montre, **jour par jour**, l'énergie **produite** par vos panneaux, **importée** du réseau et **exportée** vers le réseau, avec l'**autoconsommation** et l'**autonomie** calculées. Pas besoin d'ouvrir le tableau de bord Énergie.
+Carte Lovelace pour Home Assistant qui montre, **jour par jour**, l'énergie **produite** par vos panneaux, **utilisée** sur place, **importée** du réseau et **exportée** vers le réseau, avec l'**autoconsommation** et l'**autonomie** calculées. Pas besoin d'ouvrir le tableau de bord Énergie.
 
 Elle a le même style que la [Carte Enedis Linky New](https://github.com/Marlboro62/content-card-linky-new), mais elle est **indépendante** : elle s'installe à part, avec son propre type `custom:linky-solaire-card`, et ne remplace aucune autre carte.
 
@@ -14,10 +14,11 @@ Elle a le même style que la [Carte Enedis Linky New](https://github.com/Marlbor
 
 ## Ce que la carte affiche
 
-- **Trois tuiles** : total produit, importé et exporté sur la période, avec la valeur d'aujourd'hui. Un clic ouvre le capteur.
-- **Autoconsommé** : produit − exporté, et la part de la production consommée sur place.
+- **Tuiles** : total produit, utilisé, importé et exporté sur la période, avec la valeur d'aujourd'hui. Un clic ouvre le capteur.
+- **Utilisé** : l'énergie produite consommée sur place, chaque jour. Elle vient de votre capteur (`used`) ou, sans lui, elle est calculée : produit − exporté.
+- **Autoconsommé** : le total utilisé sur place (capteur `used`, sinon produit − exporté), et la part de la production consommée sur place.
 - **Autonomie** : part de vos besoins couverte par le solaire, autoconsommé ÷ (autoconsommé + importé).
-- **Graphique en barres** : les trois valeurs pour chaque jour, aujourd'hui compris (journée en cours).
+- **Graphique en barres** : les valeurs de chaque jour, aujourd'hui compris (journée en cours), sur 5, 7 ou 14 jours.
 - **Tableau jour par jour**, du plus récent au plus ancien (désactivable).
 
 Chaque série est facultative : avec seulement un capteur de production, la carte affiche la production seule. L'autoconsommation demande la production et l'export, l'autonomie demande les trois.
@@ -66,6 +67,8 @@ days: 7
 | `production` | Énergie produite par les panneaux (onduleur) | détectée si possible |
 | `import` | Énergie importée du réseau (soutirée) | détectée si possible |
 | `export` | Énergie exportée vers le réseau (injectée) | détectée si possible |
+| `used` | Énergie produite utilisée sur place (autoconsommée), si vous avez un capteur | calculée : produit − exporté |
+| `show_used` | Afficher la série « Utilisé » | `true` |
 | `days` | Nombre de jours affichés, aujourd'hui compris (de 1 à 31) | `7` |
 | `title` | Titre de la carte | `Solaire` |
 | `show_table` | Afficher le tableau jour par jour | `true` |
