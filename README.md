@@ -36,7 +36,7 @@ Elle a le même style que la [Carte Enedis Linky New](https://github.com/Marlbor
 
 | Style MyElectricalData (sombre) | Clair |
 | --- | --- |
-| ![Aperçu sombre](images/apercu-sombre.png) | ![Aperçu clair](images/apercu-clair.png) |
+| ![Aperçu sombre](https://raw.githubusercontent.com/Marlboro62/linky-solaire-card/main/images/apercu-sombre.png) | ![Aperçu clair](https://raw.githubusercontent.com/Marlboro62/linky-solaire-card/main/images/apercu-clair.png) |
 
 *Aperçus réalisés avec des données fictives. Carte validée avec une installation Enphase réelle (production remise à zéro chaque jour, import et export cumulés).*
 
