@@ -14,7 +14,7 @@
  */
 
 (() => {
-const CARD_VERSION = "0.2.1";
+const CARD_VERSION = "0.3.0-beta.1";
 
 /* ------------------------------------------------------------- affichage */
 
@@ -386,7 +386,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand svg { width: 34px; height: 34px; fill: none; }
 .brand .house { stroke: var(--med-green); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
-.brand .bolt { fill: var(--med-blue); }
+.brand .bolt { fill: var(--med-accent, var(--med-blue)); }
 .title { font-size: 1.15rem; font-weight: 700; letter-spacing: .2px; }
 .sub { font-size: .78rem; color: var(--med-muted); }
 .tempo { display: flex; gap: 8px; }
@@ -447,7 +447,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .day b { color: var(--med-text); font-size: .78rem; }
 .day .dot { width: 6px; height: 6px; margin-top: 2px; }
 .day.on { background: var(--med-surface); }
-.day:focus-visible { outline: 2px solid var(--med-blue); }
+.day:focus-visible { outline: 2px solid var(--med-accent, var(--med-blue)); }
 
 .detail { margin: 8px 12px 0; padding: 10px 12px; border-radius: 12px; background: var(--med-surface); border: 1px solid var(--med-line); }
 .detail-h { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--med-muted); }
@@ -462,7 +462,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .power.is-over { border-color: var(--t-red); }
 .power-t { display: flex; justify-content: space-between; font-size: .85rem; }
 .gauge { height: 6px; border-radius: 6px; background: var(--med-line); margin: 8px 0 6px; overflow: hidden; }
-.gauge i { display: block; height: 100%; background: linear-gradient(90deg, var(--med-green), var(--med-blue)); }
+.gauge i { display: block; height: 100%; background: linear-gradient(90deg, var(--med-green), var(--med-accent, var(--med-blue))); }
 .is-over .gauge i { background: var(--t-red); }
 .power-n { font-size: .75rem; color: var(--med-muted); }
 
@@ -476,6 +476,9 @@ footer { padding: 10px 18px 14px; font-size: .7rem; color: var(--med-muted); }
 .empty span { color: var(--med-muted); }
 /* Thème Home Assistant : fond, textes et bordures suivent le thème clair ou sombre */
 ha-card.th-ha {
+  /* accent (icônes, onglets, sélections, contours) : couleur principale du thème ; les bleus porteurs de sens restent bleus */
+  --med-accent: var(--primary-color, #1d93e3);
+  --med-on-accent: var(--text-primary-color, #fff);
   --med-bg: var(--ha-card-background, var(--card-background-color, #fff));
   --med-surface: color-mix(in srgb, var(--primary-text-color, #000) 5%, transparent);
   --med-line: var(--divider-color, rgba(127, 127, 127, .25));
