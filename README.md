@@ -55,9 +55,10 @@ Chaque série est facultative : avec seulement un capteur de production, la cart
 
 ### Avec HACS (recommandé)
 
-1. Dans HACS, menu **⋮** → **Dépôts personnalisés**.
-2. Ajoutez `https://github.com/Marlboro62/linky-solaire-card` avec le type **Tableau de bord** (Dashboard).
-3. Cherchez **Carte Linky Solaire**, installez-la, puis rechargez la page (Ctrl+F5).
+1. Dans HACS, cherchez **Carte Linky Solaire** et installez-la.
+2. Rechargez la page (Ctrl+F5).
+
+Si la carte n'apparaît pas encore dans la recherche de HACS, ajoutez le dépôt à la main : menu **⋮** → **Dépôts personnalisés**, adresse `https://github.com/Marlboro62/linky-solaire-card`, type **Tableau de bord** (Dashboard), puis cherchez **Carte Linky Solaire**.
 
 ### Manuellement
 
