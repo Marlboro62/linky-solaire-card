@@ -28,6 +28,9 @@
 
 # Carte Linky Solaire
 
+[![HACS Default](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz/)
+[![Release](https://img.shields.io/github/v/release/Marlboro62/linky-solaire-card)](https://github.com/Marlboro62/linky-solaire-card/releases)
+
 Carte Lovelace pour Home Assistant qui montre, **jour par jour**, l'énergie **produite** par vos panneaux, **utilisée** sur place, **importée** du réseau et **exportée** vers le réseau, avec l'**autoconsommation** et l'**autonomie** calculées. Pas besoin d'ouvrir le tableau de bord Énergie.
 
 Elle a le même style que la [Carte Enedis Linky New](https://github.com/Marlboro62/content-card-linky-new), mais elle est **indépendante** : elle s'installe à part, avec son propre type `custom:linky-solaire-card`, et ne remplace aucune autre carte.
